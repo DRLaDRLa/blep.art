@@ -37,6 +37,13 @@ module LinkHelper
     "yiff.life",
     "weasyl.com",
     "webtoons.com",
+    # AI Art sites
+    "civitai.com",
+    "civitai.red",
+    "crushon.ai",
+    "frosting.ai",
+    "pixai.art",
+    "tantabus.ai",
     #
     # Social media
     "aethy.com",

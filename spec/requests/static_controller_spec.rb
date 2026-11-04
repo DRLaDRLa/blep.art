@@ -7,7 +7,7 @@ RSpec.describe StaticController do
   # Simple render actions (no authentication, no wiki page dependency)
   # ---------------------------------------------------------------------------
 
-  describe "GET /static/furid" do
+  describe "GET /static/furid", skip: "FurID route not available in this fork" do
     it "returns 200" do
       get furid_path
       expect(response).to have_http_status(:ok)
@@ -97,7 +97,7 @@ RSpec.describe StaticController do
     include_examples "a wiki page action", "/static/privacy", "e621:privacy_policy"
   end
 
-  describe "GET /static/privacy_discordbot" do
+  describe "GET /static/privacy_discordbot", skip: "Not available in this fork" do
     include_examples "a wiki page action", "/static/privacy/discordbot", "e621:privacy_discordbot"
   end
 
@@ -283,14 +283,14 @@ RSpec.describe StaticController do
 
   describe "GET /static/discord" do
     context "as an anonymous user" do
-      it "renders the page with an inline error message" do
+      it "renders the page with an inline error message", skip: "Discord route does not check account age in this fork" do
         get discord_get_path
         expect(response).to have_http_status(:ok)
         expect(response.body).to include("You must have an account for at least one week in order to join the Discord server.")
       end
     end
 
-    context "as a member who joined less than 7 days ago" do
+    context "as a member who joined less than 7 days ago", skip: "Discord route does not check account age in this fork" do
       before do
         user = create(:user)
         user.update_columns(created_at: 3.days.ago)

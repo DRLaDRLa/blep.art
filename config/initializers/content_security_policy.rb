@@ -30,7 +30,7 @@ Rails.application.configure do
     policy.font_src    :self
     policy.img_src     :self, :data, "static1.e621.net", "static1.e926.net", "rv.e621.net"
     policy.child_src   :none
-    policy.form_action :self, "discord.e621.net", "discord.com"
+    policy.form_action :self
     # Specify URI for violation reports
     # policy.report_uri "/csp-violation-report-endpoint"
   end
