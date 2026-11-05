@@ -67,12 +67,12 @@ You are recommended to reconsider and rethink your life choices.
 
 If you are sure that you want to do this, follow these steps.
 
-1. Clone the repo into a `vendor` directory. Example: `~/e621ng/vendor/dtext/`.
-   1. `cd ~/e621ng`
+1. Clone the repo into a `vendor` directory. Example: `~/blep.art/vendor/dtext/`.
+   1. `cd ~/blep.art`
    2. `mkdir vendor && cd vendor`
    3. `git clone https://github.com/e621ng/dtext.git` (substitute your local fork as needed)
 2. Rebuild the container
-   1. `cd ~/e621ng`
+   1. `cd ~/blep.art`
    2. `docker compose build --no-cache`
 3. Reset the Gemfile.lock: `git checkout HEAD -- Gemfile.lock`
   This is not required, but it will prevent you from accidentally committing bad changes.
