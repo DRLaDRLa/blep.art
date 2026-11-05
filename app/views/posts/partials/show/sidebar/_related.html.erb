@@ -1,7 +1,7 @@
 <ul>
   <li><%= link_to "Sets with this post", post_sets_path(post_id: @post.id), rel: "nofollow" %></li>
   <% if IqdbProxy.enabled? && @post.has_preview? %>
-    <li><%= link_to "Visually similar on E6", iqdb_queries_path(search: { post_id: @post.id }), rel: "nofollow noreferrer", data: { hotkey: "iqdb" } %></li>
+    <li><%= link_to "Visually similar on #{Danbooru.config.app_name}", iqdb_queries_path(search: { post_id: @post.id }), rel: "nofollow noreferrer", data: { hotkey: "iqdb" } %></li>
   <% end %>
   <% if @post.visible? %>
     <li class="list-break"></li>
