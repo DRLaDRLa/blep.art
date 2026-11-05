@@ -8,7 +8,7 @@ RSpec.describe E6aiFavoriteImportJob do
   let(:user) { create(:user) }
   let(:posts) { create_list(:post, 5) }
   let(:import) { E6aiFavoriteImport.create!(user: user, e6ai_user_id: 42) }
-  let(:source) { instance_double(E6aiFavoritesSource, scraped: nil, hidden_message: "No public favorites were found") }
+  let(:source) { instance_double(E6aiFavoritesSource, scraped: nil, not_found_message: "There is no saved copy") }
   let(:job) { described_class.new }
 
   before do
@@ -16,17 +16,17 @@ RSpec.describe E6aiFavoriteImportJob do
     allow(BulkIndexUpdateJob).to receive(:perform_async)
   end
 
-  def result(source_name, ids) = E6aiFavoritesSource::Result.new(source: source_name, post_ids: ids)
+  def result(ids) = E6aiFavoritesSource::Result.new(source: "scrape", post_ids: ids)
 
   # The order the favorites page shows: PostSets::Favorites sorts by created_at, newest first.
   def favorites_page_order = Favorite.where(user_id: user.id).order(created_at: :desc).pluck(:post_id)
 
-  context "when the crawl has the whole list" do
-    # newest first, as e6ai.net lists them. 999_999 is not on this site; posts[4] is mid-transfer.
+  context "when the crawl has the list" do
+    # newest first, as e6ai.net listed them. 999_999 is not on this site; posts[4] is mid-transfer.
     let(:newest_first) { [posts[2].id, 999_999, posts[4].id, posts[0].id, posts[3].id, posts[1].id] }
 
     before do
-      allow(source).to receive(:scraped).and_return(result("scrape", newest_first))
+      allow(source).to receive(:scraped).and_return(result(newest_first))
       posts[4].update_columns(bit_flags: posts[4].bit_flags | Post.flag_value_for("favorites_transfer_in_progress"))
     end
 
@@ -61,37 +61,11 @@ RSpec.describe E6aiFavoriteImportJob do
       expect(Favorite.where(user_id: user.id).count).to eq(2) # the first batch, committed whole
       expect(user.reload.favorite_count).to eq(2)
     end
-  end
-
-  context "when the crawl does not have the list" do
-    before do
-      allow(source).to receive(:profile_favorite_count).and_return(2)
-      allow(source).to receive(:live).and_yield(1, 2).and_return(result("live", [posts[3].id, posts[2].id]))
-    end
-
-    it "fetches live and records progress" do
-      job.perform(import.id, 1)
-      expect(import.reload).to have_attributes(status: "done", source: "live", expected_count: 2, pages_fetched: 1, imported_count: 2)
-    end
-
-    it "fails with a message the user can act on, and no internal details" do
-      failures = {
-        -> { allow(source).to receive(:live).and_return(result("live", [])) } => "No public favorites were found",
-        -> { allow(source).to receive(:live).and_raise(E6aiFavoritesSource::Error, "There is no e6ai.net user with ID 42.") } => "There is no e6ai.net user with ID 42.",
-        -> { allow(source).to receive(:live).and_raise(Errno::ENOENT, "/home/blep/data/secret") } => E6aiFavoriteImportJob::GENERIC_ERROR,
-      }
-      failures.each do |setup, message|
-        import.update_columns(status: "queued")
-        setup.call
-        job.perform(import.id, 1)
-        expect(import.reload).to have_attributes(status: "failed", error: message)
-      end
-    end
 
     it "leaves a restarted or finished import alone" do
-      allow(source).to receive(:live) do |&block|
-        import.update_columns(attempt: 2, status: "queued") # restarted while this job was fetching
-        block.call(1, 2)
+      allow(source).to receive(:scraped) do
+        import.update_columns(attempt: 2, status: "queued") # restarted while this job was running
+        result(newest_first)
       end
       job.perform(import.id, 1)
       expect(import.reload).to have_attributes(attempt: 2, status: "queued", error: nil)
@@ -100,33 +74,17 @@ RSpec.describe E6aiFavoriteImportJob do
       job.perform(import.id, 1)                       # an old attempt
       import.update_columns(status: "done")
       job.perform(import.id, 2)                       # already finished
-      expect(source).to have_received(:live).once
-    end
-
-    it "waits its turn while another import is fetching, without looking stalled" do
-      import.update_columns(updated_at: 9.minutes.ago)
-      allow(job).to receive(:with_live_lock).and_return(false)
-      allow(described_class).to receive(:perform_in)
-      job.perform(import.id, 1)
-      expect(described_class).to have_received(:perform_in).with(5, import.id, 1)
-      expect(import.reload).to have_attributes(status: "queued")
-      expect(import.updated_at).to be > 1.minute.ago
+      expect(source).to have_received(:scraped).once
     end
   end
 
-  it "holds the live-fetch lock only while fetching, releasing it when the fetch raises" do
-    # A separate session: transactional tests share one connection, and a session can re-take its own lock.
-    free_elsewhere = lambda do
-      other = PG.connect(ActiveRecord::Base.connection.raw_connection.conninfo_hash.compact)
-      got = other.exec("SELECT pg_try_advisory_lock(#{described_class::LIVE_FETCH_LOCK})").getvalue(0, 0) == "t"
-      other.exec("SELECT pg_advisory_unlock(#{described_class::LIVE_FETCH_LOCK})") if got
-      got
-    ensure
-      other&.close
-    end
-    held = nil
-    expect { job.send(:with_live_lock) { held = !free_elsewhere.call; raise "fetch failed" } }.to raise_error("fetch failed")
-    expect(held).to be(true)
-    expect(free_elsewhere.call).to be(true)
+  it "fails with a message the user can act on, and no internal details" do
+    job.perform(import.id, 1)
+    expect(import.reload).to have_attributes(status: "failed", error: "There is no saved copy")
+
+    import.update_columns(status: "queued")
+    allow(source).to receive(:scraped).and_raise(Errno::ENOENT, "/home/blep/data/secret")
+    job.perform(import.id, 1)
+    expect(import.reload).to have_attributes(status: "failed", error: E6aiFavoriteImportJob::GENERIC_ERROR)
   end
 end

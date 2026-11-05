@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
-# Copies a user's public e6ai.net favorites. Lists the crawl already holds are
-# saved straight away; the rest are fetched live, one import at a time.
+# Copies a user's public e6ai.net favorites from the public favorites crawl.
 class E6aiFavoriteImportJob < ApplicationJob
   sidekiq_options queue: "low_prio", retry: false
 
-  LIVE_FETCH_LOCK = 0x6e6a1f
-  BUSY_RETRY_SECONDS = 5
   BATCH_SIZE = 5_000
   GENERIC_ERROR = "Something went wrong while importing. Please try again later."
 
@@ -19,8 +16,9 @@ class E6aiFavoriteImportJob < ApplicationJob
     return if @import.nil? || @import.attempt != attempt || @import.finished?
 
     source = E6aiFavoritesSource.new(@import.e6ai_user_id)
-    result = source.scraped || fetch_live(source)
-    save!(result) if result
+    result = source.scraped
+    raise E6aiFavoritesSource::Error, source.not_found_message if result.nil?
+    save!(result)
   rescue Superseded
     nil
   rescue E6aiFavoritesSource::Error => e
@@ -44,42 +42,13 @@ class E6aiFavoriteImportJob < ApplicationJob
     E6aiFavoriteImport.where(id: @import.id, attempt: @attempt).update_all(status: "failed", error: message, updated_at: Time.current)
   end
 
-  # Returns nil after requeueing when another live import holds the lock.
-  def fetch_live(source)
-    unless with_live_lock { return fetch_live_locked(source) }
-      progress!
-      self.class.perform_in(BUSY_RETRY_SECONDS, @import.id, @attempt)
-    end
-    nil
-  end
-
-  def fetch_live_locked(source)
-    progress!(status: "fetching")
-    @expected = source.profile_favorite_count
-    progress!(expected_count: @expected)
-    result = source.live { |pages, found| progress!(pages_fetched: pages, found_count: found) }
-    raise E6aiFavoritesSource::Error, source.hidden_message if result.post_ids.empty?
-    result
-  end
-
-  def with_live_lock
-    conn = ActiveRecord::Base.connection
-    return false unless conn.select_value("SELECT pg_try_advisory_lock(#{LIVE_FETCH_LOCK})")
-    begin
-      yield
-    ensure
-      conn.select_value("SELECT pg_advisory_unlock(#{LIVE_FETCH_LOCK})")
-    end
-    true
-  end
-
   # post_ids arrive newest first. The newest are kept when the list does not fit under the
   # favorite limit. Each favorite gets its own created_at, one microsecond apart, because the
   # favorites page sorts by created_at: the newest on e6ai.net becomes the newest here.
   def save!(result)
     post_ids = result.post_ids
     user = @import.user
-    progress!(status: "saving", source: result.source, found_count: post_ids.size, expected_count: @expected || post_ids.size)
+    progress!(status: "saving", source: result.source, found_count: post_ids.size, expected_count: post_ids.size)
 
     transfer_flag = Post.flag_value_for("favorites_transfer_in_progress")
     on_blep = Set.new
