@@ -21,12 +21,11 @@ function respondWith (...replies: (object | number | Error)[]) {
   return fetchMock;
 }
 
-const fetching = { status: "fetching", percent: 25, found_count: 320, expected_count: 1280 };
+const saving = { status: "saving", percent: 25, found_count: 1280, expected_count: 1280 };
 
 it("describes each stage", () => {
-  expect(describeProgress(fetching)).toBe("Fetching from e6ai.net: 320 of 1,280 favorites…");
-  expect(describeProgress({ ...fetching, expected_count: null })).toBe("Fetching from e6ai.net: 320 favorites…");
-  expect(describeProgress({ ...fetching, status: "saving" })).toBe("Saving 320 favorites…");
+  expect(describeProgress({ ...saving, status: "queued" })).toBe("Waiting to start…");
+  expect(describeProgress(saving)).toBe("Saving 1,280 favorites…");
 });
 
 describe("watchImportProgress", () => {
@@ -43,12 +42,12 @@ describe("watchImportProgress", () => {
   });
 
   it("moves the bar while the import runs, then shows the finished page", async () => {
-    const root = mount("fetching");
-    const fetchMock = respondWith(fetching, { status: "failed", percent: 0, found_count: 0, expected_count: null });
+    const root = mount("saving");
+    const fetchMock = respondWith(saving, { status: "failed", percent: 0, found_count: 0, expected_count: null });
     watchImportProgress(root, 1000, finish);
     await vi.advanceTimersByTimeAsync(1000);
     expect(root.querySelector("progress").value).toBe(25);
-    expect(root.querySelector(".e6ai-import-status").textContent).toBe("Fetching from e6ai.net: 320 of 1,280 favorites…");
+    expect(root.querySelector(".e6ai-import-status").textContent).toBe("Saving 1,280 favorites…");
     await vi.advanceTimersByTimeAsync(1000);
     expect(finish).toHaveBeenCalledOnce();
     await vi.advanceTimersByTimeAsync(5000);
@@ -56,8 +55,8 @@ describe("watchImportProgress", () => {
   });
 
   it("backs off after errors, recovers after a success, and stops once logged out", async () => {
-    const fetchMock = respondWith(new Error("offline"), 500, fetching, 403);
-    watchImportProgress(mount("fetching"), 1000, finish);
+    const fetchMock = respondWith(new Error("offline"), 500, saving, 403);
+    watchImportProgress(mount("saving"), 1000, finish);
     await vi.advanceTimersByTimeAsync(1000); // fails: next in 2 s
     await vi.advanceTimersByTimeAsync(1999);
     expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -70,9 +69,9 @@ describe("watchImportProgress", () => {
   });
 
   it("does not poll a finished import, or after being stopped", async () => {
-    const fetchMock = respondWith(fetching);
+    const fetchMock = respondWith(saving);
     watchImportProgress(mount("done"), 1000, finish);
-    watchImportProgress(mount("fetching"), 1000, finish)();
+    watchImportProgress(mount("saving"), 1000, finish)();
     await vi.advanceTimersByTimeAsync(5000);
     expect(fetchMock).not.toHaveBeenCalled();
   });

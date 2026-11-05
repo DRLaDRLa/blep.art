@@ -15,10 +15,6 @@ export function describeProgress (data: ImportProgressData): string {
   switch (data.status) {
     case "queued":
       return "Waiting to start…";
-    case "fetching":
-      return data.expected_count
-        ? `Fetching from e6ai.net: ${n(data.found_count)} of ${n(data.expected_count)} favorites…`
-        : `Fetching from e6ai.net: ${n(data.found_count)} favorites…`;
     case "saving":
       return `Saving ${n(data.found_count)} favorites…`;
     default:

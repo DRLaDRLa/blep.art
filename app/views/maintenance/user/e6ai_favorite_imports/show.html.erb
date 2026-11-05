@@ -4,7 +4,7 @@
 
     <% if @import.nil? || @import.restartable? %>
       <p>Copy your public favorites from your e6ai.net account to this one. This can only be done once.</p>
-      <p>Your favorites on e6ai.net need to be public. Posts that are not on this site are skipped.</p>
+      <p>Only favorites that were public when e6ai.net closed were saved. Posts that are not on this site are skipped.</p>
 
       <% if @import&.display_error.present? %>
         <p class="e6ai-import-error"><strong>The last attempt failed:</strong> <%= @import.display_error %></p>
@@ -25,8 +25,6 @@
           <% case @import.status %>
           <% when "queued" %>
             Waiting to start&hellip;
-          <% when "fetching" %>
-            Fetching from e6ai.net: <%= number_with_delimiter(@import.found_count) %><%= " of #{number_with_delimiter(@import.expected_count)}" if @import.expected_count %> favorites&hellip;
           <% when "saving" %>
             Saving <%= number_with_delimiter(@import.found_count) %> favorites&hellip;
           <% when "done" %>
