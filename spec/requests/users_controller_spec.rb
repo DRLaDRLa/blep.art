@@ -731,6 +731,14 @@ RSpec.describe UsersController do
         expect(ModAction.last[:values]).to include("user_id" => user.id)
         expect(response).to redirect_to(user_path(user))
       end
+
+      it "resets the user's e6ai.net favorites import, and no one else's" do
+        E6aiFavoriteImport.create!(user: user, e6ai_user_id: 1, status: "done")
+        other = E6aiFavoriteImport.create!(user: create(:user), e6ai_user_id: 2, status: "done")
+        post flush_favorites_user_path(user)
+        expect(E6aiFavoriteImport.where(user_id: user.id)).to be_empty
+        expect(other.reload).to be_present
+      end
     end
   end
 end
