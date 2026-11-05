@@ -1,3 +1,6 @@
+@use "colors/palette";
+@use "colors/theme";
+
 #a-show {
   display: flex;
   flex-flow: column;
@@ -11,12 +14,12 @@ $info_border: 0.25rem;
   display: flex;
   flex-flow: column;
   gap: 0.5rem;
-  @include st-max-width;
+  max-width: 50rem;
 
   &-section {
-    background: themed("color-section");
+    background: theme.color("section");
     padding: 0.5rem;
-    @include st-radius;
+    border-radius: 0.25rem;
   }
 }
 
@@ -26,7 +29,7 @@ $info_border: 0.25rem;
   grid-template-areas: "adr-avatar adr-creator"
                        "adr-avatar adr-reason";
   gap: 0.125rem 0.25rem;
-  @include st-max-width;
+  max-width: 50rem;
 
   &-avatar {
     grid-area: adr-avatar;
@@ -50,7 +53,7 @@ $info_border: 0.25rem;
   display: flex;
   flex-flow: column;
   gap: 0.5rem;
-  border-left: $info_border solid themed("color-dtext-code");
+  border-left: $info_border solid theme.color("dtext-code");
   margin-left: $avatar_size + $info_border;
 }
 
@@ -60,7 +63,7 @@ $info_border: 0.25rem;
   gap: 0.5rem;
   margin-left: $avatar_size + $info_border;
 
-  border-left: $info_border solid themed("color-dtext-quote");
+  border-left: $info_border solid theme.color("dtext-quote");
 }
 
 .appeal-display-claim {
@@ -71,15 +74,15 @@ $info_border: 0.25rem;
 .appeal-display-avatar-placeholder {
   width: $avatar_size;
   height: $avatar_size;
-  background: themed("color-section");
-  @include st-radius;
+  background: theme.color("section");
+  border-radius: 0.25rem;
 }
 
 
 // Flag Appeals
 .appeal-display-flag {
   &-info {
-    background: palette("background-red");
+    background: palette.color("background-red");
   }
 
   &-post {

@@ -1,16 +1,13 @@
-@import "base/breakpoints";
+@use "themes"; // Emits all theme definitions
+
 @import "base/functions";
-@import "base/palette";
-@import "base/themable"; //Drags in themes automatically
 @import "base/colors";
-@import "base/vars";
 @import "base/reset";
 @import "base/base";
 @import "base/links";
 @import "base/fonts";
 @import "base/logos";
 
-@import "common/standard_variables";
 @import "common/standard_elements";
 
 @import "common/footer";

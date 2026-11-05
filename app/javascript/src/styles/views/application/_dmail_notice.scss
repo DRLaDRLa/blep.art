@@ -1,3 +1,7 @@
+@use "colors/palette";
+@use "colors/theme";
+@use "base/breakpoints";
+
 .dmail-notice {
   display: flex;
   justify-content: center;
@@ -10,7 +14,7 @@
   border-radius: 0;
 
   margin: 0.5rem; // Squished on mobile otherwise
-  @include window-larger-than(50rem) {
+  @include breakpoints.desktop {
     margin: 0;
   }
 
@@ -19,22 +23,22 @@
     display: flex;
     align-items: center;
 
-    background: themed("color-section");
+    background: theme.color("section");
     font-size: 1.125rem;
     font-weight: bold;
     line-height: 1.25rem;
-    @include st-radius;
+    border-radius: 0.25rem;
 
-    color: themed("color-text");
-    .dmail-notice-highlight { color: themed("color-link"); }
-    &:hover .dmail-notice-highlight { color: themed("color-link-hover"); }
-    &:active .dmail-notice-highlight { color: themed("color-link-active"); }
+    color: theme.color("text");
+    .dmail-notice-highlight { color: theme.color("link"); }
+    &:hover .dmail-notice-highlight { color: theme.color("link-hover"); }
+    &:active .dmail-notice-highlight { color: theme.color("link-active"); }
 
     svg {
       height: 100%; // Proper height if the message linebreaks
       padding: 0 0.625rem;
-      background-color: palette("background-red");
-      @include st-radius;
+      background-color: palette.color("background-red");
+      border-radius: 0.25rem;
     }
 
     .dmail-notice-text {
@@ -46,13 +50,13 @@
   & &-hide {
     display: flex;
     align-items: center;
-    background: themed("color-section");
+    background: theme.color("section");
     padding: 0.625rem;
-    @include st-radius;
+    border-radius: 0.25rem;
 
-    color: themed("color-link");
-    &:hover { color: themed("color-link-hover"); }
-    &:active { color: themed("color-link-active"); }
+    color: theme.color("link");
+    &:hover { color: theme.color("link-hover"); }
+    &:active { color: theme.color("link-active"); }
   }
 
   svg {

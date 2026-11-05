@@ -1,3 +1,5 @@
+@use "base/breakpoints";
+
 // Searchbar
 .post-search {
   display: flex;
@@ -15,7 +17,7 @@
 
     // Make way for the settings button
     margin-right: 5rem;
-    @include window-larger-than(50rem) {
+    @include breakpoints.desktop {
       margin-right: unset;
     }
 
@@ -33,7 +35,7 @@
     textarea {
 
       // Override default texarea styles
-      font-family: $base_font_family;
+      font-family: inherit;
       font-size: 1rem;
       line-height: 1rem;
       padding: 0.5rem 0 0.5rem 0.5rem;
@@ -78,7 +80,7 @@
       }
     }
 
-    @include window-larger-than(800px) {
+    @include breakpoints.desktop {
       textarea { font-size: 0.85rem; }
       button[type="submit"] svg {
         height: 1.25rem;

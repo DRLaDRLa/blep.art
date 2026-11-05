@@ -1,3 +1,6 @@
+@use "colors/theme";
+@use "base/breakpoints";
+
 tabs-menu, tabs-content {
   max-width: 100rem;
 }
@@ -20,7 +23,7 @@ tabs-menu, tabs-content {
     min-width: 100%;
     max-height: 25rem;
     &.expanded { max-height: unset; }
-    @include window-larger-than(50rem) { max-height: unset; }
+    @include breakpoints.desktop { max-height: unset; }
 
     .content-readmore {
       display: none;
@@ -34,11 +37,11 @@ tabs-menu, tabs-content {
       font-size: 1rem;
       line-height: 1rem;
 
-      background: themed("color-section-lighten-10");
-      color: themed("color-text");
+      background: theme.color("section-lighten-10");
+      color: theme.color("text");
 
       &:hover {
-        background: themed("color-section-lighten-5");
+        background: theme.color("section-lighten-5");
       }
     }
 
@@ -49,7 +52,7 @@ tabs-menu, tabs-content {
   }
 }
 
-@include window-larger-than(50rem) {
+@include breakpoints.desktop {
   tabs-menu { display: none; }
   tabs-content {
     display: grid;

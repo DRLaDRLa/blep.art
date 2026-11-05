@@ -1,15 +1,17 @@
+@use "colors/theme";
+
 #staff-wiki-label {
-  background: themed("color-section");
+  background: theme.color("section");
 
   width: max-content;
   min-width: 20rem;
 
   margin: 0.5rem 0;
   padding: 0.5rem;
-  @include st-padding(050);
-  @include st-radius;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
 
-  border-left: 0.25rem solid themed("color-tag-invalid");
+  border-left: 0.25rem solid theme.color("tag-invalid");
 
   h3 {
     margin-bottom: 0.5rem;

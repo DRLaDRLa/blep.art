@@ -1,3 +1,5 @@
+@use "colors/theme";
+
 // Prevents scrolling of the body when the modal is open
 body.scroll-lock {
   height: 0;
@@ -18,7 +20,7 @@ body.scroll-lock {
   align-items: center;
   justify-content: center;
 
-  background: themed("color-background");
+  background: theme.color("background");
 }
 
 // Dialog element
@@ -30,14 +32,14 @@ body.scroll-lock {
   max-width: 600px;
   width: 100%;
 
-  font-family: "Roboto", $base_font_family;
+  font-family: "Roboto", Verdana, Geneva, sans-serif;
 
 
   // Header title
   &-header {
     margin: 0 0.5rem;  // align with dialog padding
 
-    font-family: "Roboto", $base_font_family;
+    font-family: "Roboto", Verdana, Geneva, sans-serif;
     font-size: 1.75rem;
     line-height: 1.75rem;
   }
@@ -52,8 +54,8 @@ body.scroll-lock {
     box-sizing: border-box;
     padding: 0.5rem;
 
-    background: themed("color-foreground");
-    @include st-radius;
+    background: theme.color("foreground");
+    border-radius: 0.25rem;
   }
 
   &-text {
@@ -66,7 +68,7 @@ body.scroll-lock {
     color: black;
     font-size: 0.85rem;
     line-height: 1rem;
-    @include st-radius;
+    border-radius: 0.25rem;
 
     overflow: hidden auto;
 
@@ -99,7 +101,7 @@ body.scroll-lock {
       width: 1rem;
       cursor: pointer;
       &:focus-visible {
-        outline: 1px solid themed("color-link-active");
+        outline: 1px solid theme.color("link-active");
       }
     }
 

@@ -1,16 +1,19 @@
+@use "colors/theme";
+@use "base/breakpoints";
+
 nav.pagination {
   display: flex;
   flex-wrap: wrap;
 
   justify-content: space-evenly;
-  background-color: themed("color-foreground");
+  background-color: theme.color("foreground");
   border-radius: 0.25rem;
 
   width: max-content;
   margin: 1rem auto;
   max-width: calc(100vw - 1rem);
 
-  & > a, & > span {
+  & > a, & > span, & > button {
     display: flex;
     box-sizing: border-box;
     justify-content: center;
@@ -24,7 +27,7 @@ nav.pagination {
     border-radius: 0.25rem;
 
     &:hover {
-      background: themed("color-section");
+      background: theme.color("section");
     }
   }
 
@@ -42,6 +45,9 @@ nav.pagination {
     }
     &.spacer {
       padding: 0.75rem 0.3rem;
+      background: transparent;
+      border: 0;
+      font: inherit;
       svg { height: 1rem; }
     }
   }
@@ -60,11 +66,11 @@ nav.pagination {
 
 
   // Tablet
-  @include window-larger-than(35rem) {
+  @include breakpoints.above(35rem) {
     justify-content: center;
     gap: 0.125rem;
 
-    a, span {
+    a, span, button {
       order: 0 !important;
       min-width: 2.25rem;
       font-size: 0.9rem;
@@ -76,8 +82,8 @@ nav.pagination {
     .next { margin-left: 1rem; }
   }
 
-  @include window-larger-than(50rem) {
-    a, span {
+  @include breakpoints.desktop {
+    a, span, button {
       padding: 0.75rem 0.5rem;
       font-size: 0.95rem;
     }

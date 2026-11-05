@@ -1,3 +1,6 @@
+@use "colors/theme";
+@use "base/breakpoints";
+
 .posts-section {
   display: flex;
   flex-flow: column;
@@ -5,7 +8,7 @@
 
   // Hack to fix spacing on mobile
   margin-top: 1rem;
-  @include window-larger-than(50rem) {
+  @include breakpoints.desktop {
     margin-top: 0;
   }
 
@@ -16,7 +19,7 @@
                    "p-posts";
     gap: 0.5em 0;
 
-    @include window-larger-than(50rem) {
+    @include breakpoints.desktop {
       grid-template: "p-header p-links"
                      "p-posts p-posts";
       grid-template-columns: 12em 1fr;
@@ -33,14 +36,14 @@
     height: 100%;
     padding: 0.5em;
     border-radius: 6px;
-    background-color: themed("color-section");
+    background-color: theme.color("section");
 
     &:hover {
-      background-color: themed("color-section-lighten-5");
+      background-color: theme.color("section-lighten-5");
     }
     &:focus, &:active {
       outline: 0;
-      color: themed("color-link-active");
+      color: theme.color("link-active");
     }
   }
 
@@ -54,7 +57,7 @@
       width: 100%;
     }
 
-    @include window-larger-than(800px) {
+    @include breakpoints.desktop {
       a { border-radius: 6px 6px 0 0; }
     }
   }
@@ -68,7 +71,7 @@
 
     span {
       padding: 0.5em;
-      color: themed("color-text-muted");
+      color: theme.color("text-muted");
     }
 
     .spacer { display: none; }
@@ -77,7 +80,7 @@
       grid-column: 3;
     }
 
-    @include window-larger-than(50rem) {
+    @include breakpoints.desktop {
       display: flex;
       a { height: min-content; }
       .spacer { display: block; }
@@ -98,7 +101,7 @@
     border-radius: 6px;
 
     // Desktop
-    @include window-larger-than(50rem) {
+    @include breakpoints.desktop {
       flex-wrap: nowrap;
       border-top-left-radius: 0;
       justify-content: flex-start;

@@ -1,14 +1,16 @@
+@use "colors/theme";
+
 body {
-  color: $hexagon-color-text;
-  color: themed("color-text");
-  background-color: $hexagon-color-background;
-  background-color: themed("color-background");
-  background-image: themed("image-background");
-  background-position: themed("image-background-position");
-  background-repeat: themed("image-background-repeat");
-  background-size: themed("image-background-size");
-  font-family: $base_font_family;
-  font-size: $font-size;
+  color: #ffffff;
+  color: theme.color("text");
+  background-color: #020f23;
+  background-color: theme.color("background");
+  background-image: theme.image("background");
+  background-position: theme.image("background-position");
+  background-repeat: theme.image("background-repeat");
+  background-size: theme.image("background-size");
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 85%;
   line-height: 1.25em;
   margin: 0 auto;
 }
@@ -30,24 +32,20 @@ dt {
   font-weight: bold;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: $base_font_family;
-}
-
 h1 {
-  font-size: $h1-size;
+  font-size: 2em;
 }
 
 h2 {
-  font-size: $h2-size;
+  font-size: 1.5em;
 }
 
 h3 {
-  font-size: $h3-size;
+  font-size: 1.16667em;
 }
 
 h4, h5, h6 {
-  font-size: $h4-size;
+  font-size: 1em;
 }
 
 fieldset {
@@ -55,7 +53,7 @@ fieldset {
 }
 
 header {
-  margin: 0 0 $padding-050 0;
+  margin: 0 0 0.5rem 0;
   padding: 0;
 }
 
@@ -81,7 +79,7 @@ menu, .menu {
   }
 }
 .menu {
-  font-size: $h3-size;
+  font-size: 1.16667em;
 }
 
 p {
@@ -94,13 +92,13 @@ table tfoot {
 }
 
 .hint {
-  color: themed("color-text-muted");
+  color: theme.color("text-muted");
   font-style: italic;
   max-width: 70%;
 }
 
 .info {
-  color: themed("color-text-muted");
+  color: theme.color("text-muted");
   font-style: italic;
   font-size: 80%;
 }

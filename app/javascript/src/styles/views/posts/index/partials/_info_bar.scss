@@ -1,5 +1,9 @@
+@use "colors/theme";
+@use "base/settings";
+@use "base/breakpoints";
+
 .posts-info-bar {
-  color: themed("color-text-muted");
+  color: theme.color("text-muted");
   font-family: monospace;
   font-size: .75rem;
 
@@ -17,8 +21,8 @@
   }
 }
 
-@include window-larger-than(50rem) {
-  @include with-setting("fullscreen", "true") {
+@include breakpoints.desktop {
+  @include settings.when("fullscreen", "true") {
     .posts-info-bar .posts-info-count {
       margin-right: 7.5rem;
     }

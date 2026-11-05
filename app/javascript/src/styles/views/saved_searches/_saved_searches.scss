@@ -1,3 +1,7 @@
+@use "colors/palette";
+@use "colors/theme";
+@use "base/breakpoints";
+
 #c-saved-searches #a-index {
   .saved-search-header {
     display: flex;
@@ -35,9 +39,9 @@
     align-items: center;
     gap: 0.5rem 1rem;
 
-    padding: $padding-050;
-    background: themed("color-section");
-    border-radius: $border-radius-full;
+    padding: 0.5rem;
+    background: theme.color("section");
+    border-radius: 0.25rem;
   }
 
   .ss-name {
@@ -71,7 +75,7 @@
   .ss-created {
     grid-area: created;
     font-size: 0.85rem;
-    color: themed("color-text-muted");
+    color: theme.color("text-muted");
   }
 
   .ss-actions {
@@ -83,18 +87,18 @@
 
   .ss-muted {
     font-weight: normal;
-    color: themed("color-text-muted");
+    color: theme.color("text-muted");
   }
 
   .saved-search-new-count {
     padding: 0 0.5em;
     font-weight: bold;
-    background: palette("plain-red");
-    color: palette("plain-white");
+    background: palette.color("plain-red");
+    color: palette.color("plain-white");
     border-radius: 1rem;
   }
 
-  @include window-larger-than(50rem) {
+  @include breakpoints.desktop {
     .saved-search-header {
       flex-direction: row;
     }
@@ -108,11 +112,11 @@
       grid-template-areas: "name query status created actions";
       border-radius: 0;
 
-      &:first-child { border-radius: $border-radius-full $border-radius-full 0 0; }
-      &:last-child { border-radius: 0 0 $border-radius-full $border-radius-full; }
-      &:only-child { border-radius: $border-radius-full; }
+      &:first-child { border-radius: 0.25rem 0.25rem 0 0; }
+      &:last-child { border-radius: 0 0 0.25rem 0.25rem; }
+      &:only-child { border-radius: 0.25rem; }
 
-      &:hover { background: themed("color-section-lighten-5"); }
+      &:hover { background: theme.color("section-lighten-5"); }
     }
 
     .ss-query {
@@ -130,7 +134,7 @@
   }
 
   .ts-muted {
-    color: themed("color-text-muted");
+    color: theme.color("text-muted");
   }
 
   .tag-subscription-add {
@@ -161,12 +165,12 @@
     grid-template-columns: minmax(0, 1fr) auto auto auto;
     align-items: center;
     gap: 0.5rem 1rem;
-    padding: $padding-050;
-    background: themed("color-section");
+    padding: 0.5rem;
+    background: theme.color("section");
 
-    &:first-child { border-radius: $border-radius-full $border-radius-full 0 0; }
-    &:last-child { border-radius: 0 0 $border-radius-full $border-radius-full; }
-    &:only-child { border-radius: $border-radius-full; }
+    &:first-child { border-radius: 0.25rem 0.25rem 0 0; }
+    &:last-child { border-radius: 0 0 0.25rem 0.25rem; }
+    &:only-child { border-radius: 0.25rem; }
   }
 
   .ts-name {
@@ -176,11 +180,11 @@
 
   .ts-count, .ts-created {
     font-size: 0.85rem;
-    color: themed("color-text-muted");
+    color: theme.color("text-muted");
     white-space: nowrap;
   }
 
-  @include window-smaller-than(30rem) {
+  @include breakpoints.below(30rem) {
     .tag-subscription-item {
       grid-template-columns: minmax(0, 1fr) auto;
     }
