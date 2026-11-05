@@ -173,7 +173,6 @@ module SiteMap
   group :tools, "Tools"
   page :tools, :news_updates, "News Updates"
   page :tools, :mascots, "Mascots"
-  # page :tools, :furid, "FurID"
   page :tools, :keyboard_shortcuts, "Keyboard Shortcuts"
   page :tools, :stats, "Stats"
   page :tools, :terms_of_use, "Terms of Use"

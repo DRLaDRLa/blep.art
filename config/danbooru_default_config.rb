@@ -844,7 +844,7 @@ If you have questions regarding this change, please \"DM the staff member\":[/dm
     end
 
     def mail_from_addr
-      "blep-art.net <noreply@blep-art.net>"
+      "blep.art <noreply@blep.art>"
     end
 
     # disable this for tests
