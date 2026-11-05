@@ -1,3 +1,6 @@
+@use "colors/theme";
+@use "base/breakpoints";
+
 /*** Quick Edit Form ***/
 #blacklist-edit-dialog {
   display: grid;
@@ -141,9 +144,9 @@
       line-height: 1rem;
       padding: 0.25rem 0;
 
-      color: themed("color-link");
+      color: theme.color("link");
       &:hover, &:focus {
-        color: themed("color-link-hover");
+        color: theme.color("link-hover");
       }
     }
 
@@ -248,7 +251,7 @@ article.blacklisted-user {
     background-size: contain;
     background-color: unset !important; // Prevent custom color from showing through
 
-    @media screen and (max-width: 800px) {
+    @include breakpoints.mobile {
       background-size: 100px !important;
       padding: 100px 100px 0px 0px !important;
     }

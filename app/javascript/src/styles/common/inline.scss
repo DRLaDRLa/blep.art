@@ -1,4 +1,4 @@
-
+@use "colors/theme";
 
 span.error {
   display: block;
@@ -7,7 +7,7 @@ span.error {
 }
 
 span.count {
-  color: themed("color-text-muted");
+  color: theme.color("text-muted");
   margin-left: 0.5em;
 }
 
@@ -18,9 +18,9 @@ kbd.key {
 /*  width: 1em;*/
   text-align: center;
   display: inline-block;
-  border-radius: $border-radius-half;
+  border-radius: 0.25rem;
 }
 
 span.inactive {
-  color: themed("color-text-muted");
+  color: theme.color("text-muted");
 }

@@ -1,3 +1,6 @@
+@use "colors/theme";
+@use "base/breakpoints";
+
 .dtext-container {
   overflow: hidden;
   word-wrap: anywhere;
@@ -9,7 +12,7 @@
   line-height: 1.25rem;
   word-break: break-word;
 
-  @include window-larger-than(800px) {
+  @include breakpoints.desktop {
     font-size: 0.9rem;
   }
 
@@ -24,7 +27,7 @@
 
     padding: 0rem 0.25rem;
     border: 1px solid rgba(0, 0, 0, 0.2);
-    @include st-radius;
+    border-radius: 0.25rem;
   }
 
   div.spoiler, details, pre, blockquote, ul {
@@ -32,11 +35,11 @@
   }
 
   pre, blockquote {
-    padding: $padding-025;
+    padding: 0.25rem;
   }
 
   details {
-    padding: $padding-050;
+    padding: 0.5rem;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -49,27 +52,27 @@
   }
 
   h1 {
-    font-size: $dtext_h1_size;
+    font-size: 2em;
   }
 
   h2 {
-    font-size: $dtext_h2_size;
+    font-size: 1.8em;
   }
 
   h3 {
-    font-size: $dtext_h3_size;
+    font-size: 1.6em;
   }
 
   h4 {
-    font-size: $dtext_h4_size;
+    font-size: 1.4em;
   }
 
   h5 {
-    font-size: $dtext_h5_size;
+    font-size: 1.2em;
   }
 
   h6 {
-    font-size: $dtext_h6_size;
+    font-size: 1em;
   }
 
   ul {
@@ -123,7 +126,7 @@
     height: 0.8em;
     margin: 0 0.2em;
 
-    background-color: themed("color-text-muted");
+    background-color: theme.color("text-muted");
     mask-image: $mask-url;
     -webkit-mask-image: $mask-url;
     mask-size: contain;
@@ -135,31 +138,31 @@
   }
 
   details, pre, blockquote {
-    border-radius: $border-radius-half;
-    border: 1px solid themed("color-section");
-    border-left: 0.25rem solid themed("color-danger");
-    background: themed("color-section-lighten-5");
+    border-radius: 0.25rem;
+    border: 1px solid theme.color("section");
+    border-left: 0.25rem solid theme.color("danger");
+    background: theme.color("section-lighten-5");
   }
 
   pre {
-    border-left-color: themed("color-dtext-code");
+    border-left-color: theme.color("dtext-code");
   }
 
   blockquote {
-    border-left-color: themed("color-dtext-quote");
+    border-left-color: theme.color("dtext-quote");
   }
 
   details {
-    border-left-color: themed("color-dtext-section");
+    border-left-color: theme.color("dtext-section");
   }
 
   @each $tag-category, $tag-category-name in $tag-categories-short {
     .dtext-color-#{$tag-category} {
-      color: themed("color-tag-#{$tag-category-name}");
+      color: theme.color("tag-#{$tag-category-name}");
     }
 
     .dtext-color-#{$tag-category-name} {
-      color: themed("color-tag-#{$tag-category-name}");
+      color: theme.color("tag-#{$tag-category-name}");
     }
   }
 }

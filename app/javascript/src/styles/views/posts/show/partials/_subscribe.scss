@@ -1,0 +1,31 @@
+@use "colors/theme";
+
+div#post-artist-subscribe {
+  display: flex;
+  flex-flow: column;
+  margin: 0.5rem 0;
+  gap: 0.5rem;
+
+  .subscribe-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 50rem;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    box-sizing: border-box;
+
+    background: theme.color("section");
+    background: linear-gradient(135deg, theme.color("section-lighten-5") 0%, theme.color("section") 30%, theme.color("section") 100%);
+    box-shadow: 0 0 0.25rem -0.125rem black;
+
+    &-name {
+      font-size: 1rem;
+    }
+
+    a.tag-subscription-toggle {
+      min-width: 7.5rem;
+      text-align: center;
+    }
+  }
+}

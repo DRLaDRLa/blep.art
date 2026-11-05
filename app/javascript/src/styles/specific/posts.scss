@@ -1,5 +1,6 @@
-
-
+@use "colors/palette";
+@use "colors/theme";
+@use "base/breakpoints";
 
 #has-parent-relationship-preview, #has-children-relationship-preview {
   display: flex;
@@ -20,9 +21,9 @@ div#c-posts, div#c-uploads, div#c-post-replacements {
     white-space: nowrap;
     max-width: 90vw;
 
-    @include window-larger-than(50rem) {
+    @include breakpoints.desktop {
       &:hover {
-        a, s { background: themed("color-background"); }
+        a, s { background: theme.color("background"); }
         z-index: 2;
         overflow: visible;
         position: relative;
@@ -30,7 +31,7 @@ div#c-posts, div#c-uploads, div#c-post-replacements {
       }
     }
 
-    .source-invalid { color: palette("text-red"); }
+    .source-invalid { color: palette.color("text-red"); }
   }
 }
 
@@ -38,10 +39,10 @@ div#c-posts {
 
   div.parent-children {
     display: flex;
-    margin: 0 (-$padding-025);
-    margin-bottom: $padding-025;
+    margin: 0 (-0.25rem);
+    margin-bottom: 0.25rem;
     div.notice {
-      margin: 0 $padding-025;
+      margin: 0 0.25rem;
     }
     div.notice-parent {
       flex-grow: 1;
@@ -49,7 +50,7 @@ div#c-posts {
   }
 
   div.notice {
-    border-radius: $border-radius-half;
+    border-radius: 0.25rem;
     padding: 0.5em;
     margin-bottom: 0.5em;
     overflow: hidden;
@@ -68,13 +69,13 @@ div#c-posts {
     }
 
     &.notice-parent, &.notice-child, &.notice-pending, &.notice-resized {
-      background-color: themed("color-section");
-      border: 1px solid themed("color-foreground");
+      background-color: theme.color("section");
+      border: 1px solid theme.color("foreground");
     }
 
     &.notice-no-shortcuts, &.notice-flagged, &.notice-deleted {
-      background-color: themed("color-danger-darken-10");
-      border: 1px solid themed("color-foreground");
+      background-color: theme.color("danger-darken-10");
+      border: 1px solid theme.color("foreground");
     }
 
     .delete-with-reason-link[data-move-favs="true"] {
@@ -101,8 +102,8 @@ div#c-posts {
     flex-flow: column;
     gap: 0.125rem;
 
-    margin-bottom: $padding-050;
-    background-color: themed('color-section');
+    margin-bottom: 0.5rem;
+    background-color: theme.color('section');
     position: relative;
 
     p {
@@ -112,13 +113,13 @@ div#c-posts {
   }
 
   aside#sidebar #tag-list h2 {
-    font-size: $h4_size;
+    font-size: 1em;
   }
 
   div#a-index {
     menu#post-sections {
       margin-bottom: 0.5em;
-      font-size: $h3-size;
+      font-size: 1.16667em;
 
       li {
         padding: 0 1em 0.5em 0;
@@ -137,7 +138,7 @@ div#c-posts {
 
     menu#post-sections {
       margin: 0;
-      font-size: $h3-size;
+      font-size: 1.16667em;
 
       li {
         padding: 0 1em 0 0;
@@ -194,7 +195,7 @@ div#c-posts {
         position: sticky;
         bottom: 0;
 
-        background: themed("color-section");
+        background: theme.color("section");
         width: min-content;
         padding: 1rem 1rem 1rem 0.5rem;
         margin: 0;
@@ -207,7 +208,7 @@ div#c-posts {
       }
       div#tag-string-editor.pending textarea {
         min-height: 5rem;
-        background: themed("color-text-muted");
+        background: theme.color("text-muted");
         border-radius: 2px;
         color: black;
         font-family: monospace;
@@ -216,20 +217,20 @@ div#c-posts {
       }
 
       #post_rating_e:checked + label {
-        background-color: themed("color-rating-explicit");
+        background-color: theme.color("rating-explicit");
       }
 
       #post_rating_q:checked + label {
-        background-color: themed("color-rating-questionable");
+        background-color: theme.color("rating-questionable");
       }
 
       #post_rating_s:checked + label {
-        background-color: themed("color-rating-safe");
+        background-color: theme.color("rating-safe");
       }
     }
 
     .nav-block {
-      background: themed("color-section");
+      background: theme.color("section");
 
       li {
         display: flex;
@@ -247,7 +248,7 @@ div#c-posts {
           }
         }
         a.nav-link:hover {
-          background: themed("color-section-lighten-5");
+          background: theme.color("section-lighten-5");
         }
         span.nav-name {
           flex-grow: 2;
@@ -282,7 +283,7 @@ div#c-posts {
 
 // Shared by posts#index and favorites#index
 div#quick-edit-div {
-  @include st-max-width;
+  max-width: 50rem;
   display: grid;
   grid-template-rows: 0fr;
   transition: grid-template-rows 0.2s ease-out;
@@ -304,10 +305,10 @@ div#quick-edit-div {
 div#avoid-posting-notice {
   font-size: 1.25rem;
   line-height: 1.5rem;
-  padding: $padding-025 $padding-050;
+  padding: 0.25rem 0.5rem;
 
-  background-color: themed("color-section");
-  border: 1px solid themed("color-foreground");
+  background-color: theme.color("section");
+  border: 1px solid theme.color("foreground");
 
   ul {
     list-style: disc;
@@ -371,7 +372,7 @@ textarea[data-autocomplete="tag-edit"] {
 
 .image-vote-buttons {
   .post-score {
-    padding: 0 $padding-050;
+    padding: 0 0.5rem;
   }
 }
 
@@ -402,7 +403,7 @@ body[data-user-can-approve-posts="true"] .notice {
     .button {
       font-size: 1.25rem;
       line-height: 1.5rem;
-      padding: $padding-025 $padding-050;
+      padding: 0.25rem 0.5rem;
     }
   }
 }
