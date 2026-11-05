@@ -5,8 +5,8 @@
 # Each start or restart bumps `attempt`, and the job only writes while the attempt it was
 # given is still current, so a restarted import cannot be overwritten by an older job.
 class E6aiFavoriteImport < ApplicationRecord
-  STATUSES = %w[queued fetching saving done failed].freeze
-  # The job records progress at least once per page or batch, and while it waits its turn.
+  STATUSES = %w[queued saving done failed].freeze
+  # The job records progress at least once per batch.
   # Longer than this without any means the job died without reporting.
   STALE_AFTER = 10.minutes
   MAX_E6AI_USER_ID = (2**31) - 1

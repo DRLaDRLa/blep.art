@@ -45,7 +45,7 @@ RSpec.describe Maintenance::User::E6aiFavoriteImportsController do
     end
 
     it "does not start again while an import is running or once it is done" do
-      E6aiFavoriteImport.create!(user: user, e6ai_user_id: 1, status: "fetching")
+      E6aiFavoriteImport.create!(user: user, e6ai_user_id: 1, status: "saving")
       start("2")
       expect(flash[:notice]).to eq("Your import is already running.")
       import.update_columns(status: "done")
@@ -79,9 +79,9 @@ RSpec.describe Maintenance::User::E6aiFavoriteImportsController do
     end
 
     it "shows progress while running, and a stalled import as failed so it can be retried" do
-      E6aiFavoriteImport.create!(user: user, e6ai_user_id: 1, status: "fetching", found_count: 640, expected_count: 1280)
+      E6aiFavoriteImport.create!(user: user, e6ai_user_id: 1, status: "saving", found_count: 640, expected_count: 1280)
       get path, params: { format: :json }
-      expect(response.parsed_body).to include("status" => "fetching", "percent" => 50, "found_count" => 640)
+      expect(response.parsed_body).to include("status" => "saving", "percent" => 50, "found_count" => 640)
       get path
       expect(response.body).to include("e6ai-import-progress")
 
