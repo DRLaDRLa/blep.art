@@ -193,6 +193,9 @@ class UsersController < ApplicationController
 
   def flush_favorites
     @user = User.find(User.name_or_id_to_id_forced(params[:id]))
+    # Also reset the e6ai.net favorites import, so the user can import again. Removing the
+    # record first stops an import that is still running at its next batch.
+    E6aiFavoriteImport.where(user_id: @user.id).delete_all
     FlushFavoritesJob.perform_async(@user.id)
     ModAction.log(:user_flush_favorites, { user_id: @user.id })
 
