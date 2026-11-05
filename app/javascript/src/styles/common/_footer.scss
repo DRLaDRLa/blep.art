@@ -85,3 +85,78 @@ footer.footer-wrapper {
     }
   }
 }
+
+
+// "Hosted by" notice: part of the footer grid, and under the footer box on the home page
+.host-notice {
+  margin: 0;
+  box-sizing: border-box;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  color: var(--color-text);
+
+  a { white-space: nowrap; }
+
+  .host-notice-donate {
+    display: block;
+    margin-top: 0.5em;
+  }
+}
+
+footer.footer-wrapper .host-notice {
+  grid-area: host;
+  width: 100%;              // wrap to the columns above, never widen them
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-section-lighten-5);
+  text-align: center;
+}
+
+// Phones: logo, then the two link columns, then the notice across both
+footer.footer-wrapper .footer-grid {
+  grid-template-areas:
+    "logo ."
+    "left right"
+    "host host";
+}
+
+// Mid widths: one row of logo + links, notice across underneath
+footer.footer-wrapper {
+  @include breakpoints.above(450px) {
+    .footer-grid {
+      grid-template-areas:
+        "logo left right"
+        "host host host";
+    }
+  }
+}
+
+// Wide screens: the notice is a column to the right of the panel. An empty column of the
+// same width on the left keeps the logo + links panel exactly centred.
+footer.footer-wrapper {
+  @include breakpoints.above(72rem) {
+    .footer-grid {
+      grid-template-columns: 18rem min-content min-content min-content 18rem;
+      grid-template-areas: ". logo left right host";
+      align-items: center;
+    }
+
+    .host-notice {
+      width: 100%;
+      margin-left: 1rem;
+      padding: 0 0 0 1rem;
+      border-top: 0;
+      border-left: 1px solid var(--color-section-lighten-5);
+      text-align: left;
+    }
+  }
+}
+
+// Home page: centred under the footer box
+#a-home > .host-notice {
+  position: relative;
+  z-index: 1;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 0.75rem 0.5rem 1rem;
+  text-align: center;
+}
