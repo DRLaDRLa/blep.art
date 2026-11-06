@@ -217,18 +217,37 @@ describe("LStorage", () => {
   });
 
   describe("Blacklist.AnonymousBlacklist", () => {
-    it("falls back to the blacklisted-tags metatag when unset, persists it, then caches", async () => {
+    it("uses the metatag default without storing it until the visitor edits, then keeps the edit", async () => {
       setMeta("blacklisted-tags", JSON.stringify(["foo", "bar"]));
-      const LStorage = await freshStorage();
-
+      let LStorage = await freshStorage();
       expect(LStorage.Blacklist.AnonymousBlacklist).toBe(JSON.stringify(["foo", "bar"]));
-      // The fallback is written through to localStorage so it isn't recomputed.
-      expect(localStorage.getItem("anonymous-blacklist")).toBe(JSON.stringify(["foo", "bar"]));
+      expect(localStorage.getItem("anonymous-blacklist")).toBeNull();
 
-      // Cached: later changes to the metatag and storage have no effect.
-      setMeta("blacklisted-tags", "[]");
+      // A later change to the site default reaches a visitor who never edited.
+      setMeta("blacklisted-tags", JSON.stringify(["baz"]));
+      vi.resetModules();
+      LStorage = await freshStorage();
+      expect(LStorage.Blacklist.AnonymousBlacklist).toBe(JSON.stringify(["baz"]));
+
+      LStorage.Blacklist.AnonymousBlacklist = JSON.stringify(["mine"]);
+      setMeta("blacklisted-tags", JSON.stringify(["other"]));
+      vi.resetModules();
+      LStorage = await freshStorage();
+      expect(LStorage.Blacklist.AnonymousBlacklist).toBe(JSON.stringify(["mine"]));
+    });
+
+    it("drops an empty pre-tracking snapshot but keeps a non-empty one", async () => {
+      setMeta("blacklisted-tags", JSON.stringify(["gore"]));
       localStorage.setItem("anonymous-blacklist", "[]");
-      expect(LStorage.Blacklist.AnonymousBlacklist).toBe(JSON.stringify(["foo", "bar"]));
+      let LStorage = await freshStorage();
+      expect(LStorage.Blacklist.AnonymousBlacklist).toBe(JSON.stringify(["gore"]));
+      expect(localStorage.getItem("anonymous-blacklist")).toBeNull();
+
+      localStorage.setItem("anonymous-blacklist", JSON.stringify(["custom"]));
+      vi.resetModules();
+      LStorage = await freshStorage();
+      expect(LStorage.Blacklist.AnonymousBlacklist).toBe(JSON.stringify(["custom"]));
+      expect(localStorage.getItem("anonymous-blacklist-edited")).toBe("1");
     });
   });
 

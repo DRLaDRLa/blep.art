@@ -168,7 +168,9 @@ class LStorage extends StorageObject {
   }
 
   // ANONYMOUS BLACKLIST
-  // Uses local caching and fetches the fallback value from the metatag
+  // A logged-out visitor's own blacklist is kept in localStorage only once they edit it.
+  // Until then the site default comes from the metatag on every page load, so a change
+  // to the default reaches visitors who never customized theirs.
   private initializeBlacklistOverride () {
     let anonymousBlacklistCache: string;
     Object.defineProperty(this.Blacklist, "AnonymousBlacklist", {
@@ -177,11 +179,18 @@ class LStorage extends StorageObject {
           return anonymousBlacklistCache; // Cached
 
         let value = localStorage.getItem("anonymous-blacklist");
-        if (!value) { // Not stored
+        if (value !== null && localStorage.getItem("anonymous-blacklist-edited") !== "1") {
+          // Stored before edits were tracked. Older code saved the default on the first
+          // visit; an empty one is that stale snapshot, anything else may be the visitor's own.
+          if (value === "[]") {
+            localStorage.removeItem("anonymous-blacklist");
+            value = null;
+          } else localStorage.setItem("anonymous-blacklist-edited", "1");
+        }
+
+        if (value === null) {
           const meta = $("meta[name=blacklisted-tags]");
-          if (meta.length == 0) value = "[]"; // No default blacklist set
-          else value = meta.attr("content") || "[]";
-          localStorage.setItem("anonymous-blacklist", value); // Let's not do this again
+          value = meta.length == 0 ? "[]" : (meta.attr("content") || "[]");
         }
 
         anonymousBlacklistCache = value;
@@ -190,6 +199,7 @@ class LStorage extends StorageObject {
       set: function (newValue) {
         anonymousBlacklistCache = newValue;
         localStorage.setItem("anonymous-blacklist", newValue);
+        localStorage.setItem("anonymous-blacklist-edited", "1");
       },
     });
   }
