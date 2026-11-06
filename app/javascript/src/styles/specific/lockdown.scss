@@ -80,6 +80,7 @@ form.lockdown-form {
       text-align: right;
       color: theme.color("text-muted");
       width: 6rem;
+      white-space: nowrap;
     }
 
     input[type="number"] { width: 6rem; }
@@ -90,9 +91,8 @@ form.lockdown-form {
       font-size: 0.9em;
     }
 
+    // Every row is drawn the same whatever its value.
     label { font-weight: normal; }
-    tr.changed label { font-weight: bold; }
-    tr.changed .default::before { content: "changed from "; }
 
     // Phones: one stacked row per limit -- label on top, input and default underneath.
     @include breakpoints.mobile {

@@ -71,7 +71,7 @@
           <tbody>
             <% Security::Lockdown::WAIT_LIMITS.each do |key, limit| %>
               <% hours = Security::Lockdown.wait_hours(key) %>
-              <tr class="<%= "changed" if hours != limit[:default] %>">
+              <tr>
                 <td><label for="wait_limits_<%= key %>"><%= limit[:label] %></label></td>
                 <td>
                   <%= number_field_tag("wait_limits[#{key}]", hours, min: 0, step: 1, id: "wait_limits_#{key}") %>
