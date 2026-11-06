@@ -118,8 +118,8 @@ class PostSet < ApplicationRecord
     end
 
     def can_make_public
-      if is_public && creator.younger_than(3.days) && !creator.is_staff?
-        errors.add(:base, "Can't make a set public until your account is at least three days old")
+      if is_public && !creator.is_staff? && Security::Lockdown.within_wait?(:set_public, creator)
+        errors.add(:base, "Can't make a set public until your account is at least #{Security::Lockdown.wait_text(:set_public)} old")
         false
       else
         true

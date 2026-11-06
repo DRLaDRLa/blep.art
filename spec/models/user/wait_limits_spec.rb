@@ -49,6 +49,30 @@ RSpec.describe User do
       expect(newbie.can_upload_with_reason).to eq(:REJ_UPLOAD_NEWBIE)
     end
 
+    it "waits the configured hours before a new account can downvote posts" do
+      newbie = create(:user, created_at: 2.days.ago)
+      vote = build(:post_vote, user: newbie, score: -1)
+      expect(vote).not_to be_valid
+      expect(vote.errors.full_messages.join).to include("must be 3 days old to downvote posts")
+
+      Security::Lockdown.set_wait_hours(:post_downvote, 24)
+      vote = build(:post_vote, user: newbie, score: -1)
+      vote.valid?
+      expect(vote.errors.full_messages.grep(/downvote/)).to be_empty
+    end
+
+    it "waits the configured hours before a new account can make a set public" do
+      newbie = create(:user, created_at: 2.days.ago)
+      set = build(:public_post_set, creator: newbie)
+      expect(set).not_to be_valid
+      expect(set.errors.full_messages.join).to include("at least 3 days old")
+
+      Security::Lockdown.set_wait_hours(:set_public, 36)
+      set = build(:public_post_set, creator: newbie)
+      set.valid?
+      expect(set.errors.full_messages.grep(/public/)).to be_empty
+    end
+
     it "has no upload wait when it is set to 0 hours" do
       Security::Lockdown.upload_wait_hours = 0
       newbie = create(:user, created_at: 1.minute.ago)

@@ -111,10 +111,29 @@ module Security
       post_flag:      { label: "Flag posts",                                          default: 72 },
       ticket:         { label: "File reports and appeals",                            default: 72 },
       pool_edit:      { label: "Edit pool details",                                   default: 72 },
+      post_downvote:  { label: "Downvote posts",                                      default: 72 },
+      set_public:     { label: "Make sets public",                                    default: 72 },
     }.freeze
 
     def self.wait_hours(key)
       Setting.public_send(:"#{key}_wait_hours")
+    end
+
+    # True while an account is still inside the given wait limit.
+    def self.within_wait?(key, user)
+      hours = wait_hours(key)
+      hours.positive? && user.younger_than(hours.hours)
+    end
+
+    # "3 days" for whole days, otherwise "N hours".
+    def self.wait_text(key)
+      hours = wait_hours(key)
+      if (hours % 24).zero?
+        days = hours / 24
+        "#{days} #{'day'.pluralize(days)}"
+      else
+        "#{hours} #{'hour'.pluralize(hours)}"
+      end
     end
 
     def self.set_wait_hours(key, hours)

@@ -8,8 +8,8 @@ class PostVote < UserVote
   end
 
   def validate_user_can_vote
-    if user.younger_than(3.days) && score == -1
-      errors.add(:user, "must be 3 days old to downvote posts")
+    if score == -1 && Security::Lockdown.within_wait?(:post_downvote, user)
+      errors.add(:user, "must be #{Security::Lockdown.wait_text(:post_downvote)} old to downvote posts")
       return false
     end
     allowed = user.can_post_vote_with_reason
